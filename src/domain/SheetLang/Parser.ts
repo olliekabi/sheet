@@ -5,7 +5,7 @@ export function parse(tokens: Token[]): number {
 }
 
 function parseExpression(tokens: Token[]): ASTNode {
-    let first = new ASTLeaf(tokens[0].value);
+    let first = new ASTLeaf(parseInt(tokens[0].value));
 
     if (tokens.length <= 1)
         return first;
@@ -29,7 +29,7 @@ function term(tokens: Token[]): ASTNode {
     let index = 0;
 
     if (index + 1 === tokens.length && tokens[index].type === TokenType.NUMBER) {
-        return new ASTLeaf(tokens[index].value)
+        return new ASTLeaf(parseInt(tokens[index].value))
     } else {
         return parseExpression(tokens);
     }

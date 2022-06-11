@@ -8,18 +8,21 @@ export enum TokenType {
     LPAREN,
     RPAREN,
 
+    CELL,
+
     EOF
 }
 
-const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
 export class Token {
     type: TokenType;
-    value: number;
+    value: string;
 
-    constructor(type: TokenType, value?: number) {
+    constructor(type: TokenType, value?: string) {
         this.type = type;
-        this.value = value || 0;
+        this.value = value || "";
     }
 }
 
@@ -27,17 +30,19 @@ export function lex(input: string): Token[] {
     if (!input)
         return [];
 
+    let cleanInput = input.toLowerCase();
+
     let tokens: Token[] = [];
     let index = 0;
 
-    while (index < input.length)
+    while (index < cleanInput.length)
     {
-        let currentInput = input[index]
+        let currentInput = cleanInput[index]
 
         if (currentInput === ' ' || currentInput === '\t') {
             index++;
         } else if (numbers.includes(currentInput)) {
-            let [token, newIndex] = getNumber(input, index);
+            let [token, newIndex] = getNumber(cleanInput, index);
             index = newIndex;
             tokens.push(token);
         } else if (currentInput === '+') {
@@ -48,6 +53,10 @@ export function lex(input: string): Token[] {
             let token = new Token(TokenType.MINUS);
             tokens.push(token);
             index++;
+        } else if (alphabet.includes(currentInput)) {
+            let [token, newIndex] = getCell(cleanInput, index);
+            index = newIndex;
+            tokens.push(token);
         }
     }
 
@@ -63,7 +72,19 @@ function getNumber(input: string, index: number): [Token, number] {
         index++;
     }
 
-    let token = new Token(TokenType.NUMBER, parseInt(numberString))
+    let token = new Token(TokenType.NUMBER, numberString)
 
     return [token, index];
+}
+
+function getCell(input: string, index: number): [Token, number] {
+    console.log("hello")
+    let cellString: string = input[index++];
+
+    let [number, newIndex] = getNumber(input, index);
+    cellString += number.value;
+
+    let token = new Token(TokenType.CELL, cellString)
+
+    return [token, newIndex];
 }
