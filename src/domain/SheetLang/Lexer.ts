@@ -11,24 +11,59 @@ export enum TokenType {
     EOF
 }
 
-export interface Token {
-    type: TokenType,
-    value: number
+const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+export class Token {
+    type: TokenType;
+    value: number;
+
+    constructor(type: TokenType, value?: number) {
+        this.type = type;
+        this.value = value || 0;
+    }
 }
 
-export function lex(value: string): Token[] {
+export function lex(input: string): Token[] {
+    if (!input)
+        return [];
 
-    let tokenStrings = value.split(' ')
-    let tokens = tokenStrings.map((token) => {
-        switch (token) {
-            case "+":
-                return {type: TokenType.ADD} as Token
-            case "-":
-                return {type: TokenType.MINUS} as Token
-            default:
-                return {type: TokenType.NUMBER, value: parseInt(token)} as Token
+    let tokens: Token[] = [];
+    let index = 0;
+
+    while (index < input.length)
+    {
+        let currentInput = input[index]
+
+        if (currentInput === ' ' || currentInput === '\t') {
+            index++;
+        } else if (numbers.includes(currentInput)) {
+            let [token, newIndex] = getNumber(input, index);
+            index = newIndex;
+            tokens.push(token);
+        } else if (currentInput === '+') {
+            let token = new Token(TokenType.ADD);
+            tokens.push(token);
+            index++;
+        } else if (currentInput === '-') {
+            let token = new Token(TokenType.MINUS);
+            tokens.push(token);
+            index++;
         }
-    });
+    }
 
-    return tokens ? tokens : [];
+    return tokens;
+}
+
+function getNumber(input: string, index: number): [Token, number] {
+
+    let numberString = "";
+
+    while (numbers.includes(input[index])) {
+        numberString += input[index];
+        index++;
+    }
+
+    let token = new Token(TokenType.NUMBER, parseInt(numberString))
+
+    return [token, index];
 }

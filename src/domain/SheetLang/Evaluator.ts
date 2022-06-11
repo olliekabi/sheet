@@ -9,10 +9,16 @@ function evaluate(input: string): string {
     if (!input)
         return input;
 
-    let tokens = lex(input);
-    let result = parse(tokens);
+    let result;
+    try {
+        let tokens = lex(input);
+        let output = parse(tokens);
+        result = output.toString();
+    } catch {
+        result = "NaN"
+    }
 
-    return result.toString();
+    return result;
 }
 
 

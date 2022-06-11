@@ -4,8 +4,8 @@ import Cell from "./Cell/Cell";
 import {evaluateSheet} from "../../domain/SheetLang/Evaluator";
 
 function Sheet() {
-    const numRows = 8;
-    const numColumns = 4;
+    const numRows = 12;
+    const numColumns = 6;
 
     const [cellInputs, setCellInputs] = useState<string[]>(createInitialCellValues(numRows, numColumns));
     const [cellOutputs, setCellOutputs] = useState<string[]>(createInitialCellValues(numRows, numColumns));
@@ -24,7 +24,6 @@ function Sheet() {
 
 
     const cells = useMemo(() => {
-        console.log("constructing cells")
         return cellInputs.map((value, index) => {
             return <Cell key={index}
                          id={index}
@@ -35,7 +34,7 @@ function Sheet() {
     }, [cellInputs, cellOutputs, handleCellValueChanged]);
 
     return (
-        <div className="sheet">
+        <div className="sheet" style={{width: `${numColumns * 105}px`}}>
             {cells}
         </div>
     );

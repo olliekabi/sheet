@@ -18,7 +18,6 @@ function Cell(props: CellProps) {
                    onFocus={() => setSelected(true)}
                    onBlur={() => setSelected(false)}
                    onChange={(event) => {
-                       console.log("cell handle: ", event.target.value)
                        props.onChange(props.id, event.target.value)
                    }}/>
         </div>
