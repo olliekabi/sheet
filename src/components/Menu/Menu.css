@@ -1,0 +1,9 @@
+.menu {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.text-menu-item {
+    padding-left: 8px;
+    padding-right: 8px;
+}
