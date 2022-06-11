@@ -1,5 +1,7 @@
 export enum TokenType {
-    NUMBER = 0,
+    UNKNOWN = 0,
+
+    NUMBER,
     ADD,
     MINUS,
     MULTIPLY,
@@ -57,6 +59,9 @@ export function lex(input: string): Token[] {
             let [token, newIndex] = getCell(cleanInput, index);
             index = newIndex;
             tokens.push(token);
+        } else {
+            tokens.push(new Token(TokenType.UNKNOWN))
+            break;
         }
     }
 
@@ -78,7 +83,6 @@ function getNumber(input: string, index: number): [Token, number] {
 }
 
 function getCell(input: string, index: number): [Token, number] {
-    console.log("hello")
     let cellString: string = input[index++];
 
     let [number, newIndex] = getNumber(input, index);

@@ -10,15 +10,21 @@ interface CellProps {
 
 function Cell(props: CellProps) {
     let [selected, setSelected] = useState(false);
+    let [value, setValue] = useState(props.value);
+
 
     return (
         <div key={props.id} className="cell">
             <input type="text"
-                   value={selected ? props.value : props.display}
+                   value={selected ? value : props.display}
                    onFocus={() => setSelected(true)}
-                   onBlur={() => setSelected(false)}
+                   onBlur={() => {
+                       setSelected(false)
+                       if (value !== props.value)
+                           props.onChange(props.id, value);
+                   }}
                    onChange={(event) => {
-                       props.onChange(props.id, event.target.value)
+                       setValue(event.target.value)
                    }}/>
         </div>
     );

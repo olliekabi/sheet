@@ -24,16 +24,16 @@ function evaluate(index: number, inputs: string[], outputs: string[], cellLookup
     try {
         let tokens = lex(input);
 
+        if (tokens.some(token => token.type === TokenType.UNKNOWN))
+            return "Bad Syntax"
+
         let calculatedTokens = tokens.map((token) => {
             if (token.type === TokenType.CELL) {
                 let referencedCellIndex = cellLookup.get(token.value)!;
                 if (outputs[referencedCellIndex]) {
-                    console.log("found")
                     return new Token(TokenType.NUMBER, outputs[referencedCellIndex])
                 } else {
-                    console.log("calculating")
                     result = evaluate(referencedCellIndex, inputs, outputs, cellLookup);
-                    console.log("result: ", result);
                     outputs[referencedCellIndex] = result;
                     return new Token(TokenType.NUMBER, result)
                 }
@@ -42,7 +42,6 @@ function evaluate(index: number, inputs: string[], outputs: string[], cellLookup
             return token;
         })
 
-        console.log(calculatedTokens);
         let output = parse(calculatedTokens);
         result = output.toString();
     } catch (e) {
